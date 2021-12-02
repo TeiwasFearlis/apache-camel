@@ -1,0 +1,24 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+metadata:
+  name: apache-camel
+# required Docker - https://github.com/GoogleContainerTools/skaffold/issues/5197
+build:
+  local:
+    push: false
+  artifacts:
+    - image: dreg.citc.ru/ru.citc.education/spring-camel-test
+deploy:
+  kustomize:
+    paths:
+      - k8s/dev
+profiles:
+  # run only application dependencies
+  - name: depsOnly
+    patches:
+      - op: remove
+        path: /build
+    deploy:
+      kustomize:
+        paths:
+          - k8s/deps
