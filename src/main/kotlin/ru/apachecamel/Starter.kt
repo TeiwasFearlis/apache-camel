@@ -14,7 +14,4 @@ class Starter : RouteBuilder(){
             .log(">>>>>>>> \${body}")
             .to("file:/Users/azaitsev/Downloads/apache-camel/src/main/files/toA")
             }
-    //     from("timer:foo")
-    //         .log("Hello camel")
-    // }
 }
