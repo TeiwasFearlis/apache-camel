@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm") version "1.5.31"
 	kotlin("plugin.spring") version "1.5.31"
+	id("com.google.cloud.tools.jib") version "3.1.4"
 }
 
 group = "ru.apache-camel"
@@ -25,7 +26,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.springframework:spring-jdbc")
-	implementation("org.liquibase:liquibase-core")
+	implementation("org.liquibase:liquibase-core:4.4.3")
 	implementation("org.apache.camel:camel-jdbc:3.4.2")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -42,4 +43,22 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+jib {
+	from {
+		image = "azul/zulu-openjdk:11"
+	}
+	to {
+		setImage(provider { "dreg.citc.ru/ru.citc.education/$name:$version" })
+	}
+	container {
+		environment = mapOf(
+			"JAVA_TOOL_OPTIONS" to listOf(
+				"-XX:MaxRAMPercentage=60",
+				"-XX:+UseStringDeduplication",
+			).joinToString(" ")
+		)
+		user = "nobody"
+	}
 }

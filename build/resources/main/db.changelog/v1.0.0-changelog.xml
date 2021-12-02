@@ -19,7 +19,7 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
             <column name="age" type="varchar">
                 <constraints  nullable="false"/>
             </column>
-            <column name="FerstName" type="varchar">
+            <column name="FirstName" type="varchar">
             </column>
         </createTable>
     </changeSet>

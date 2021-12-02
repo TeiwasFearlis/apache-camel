@@ -8,6 +8,7 @@ build:
     push: false
   artifacts:
     - image: dreg.citc.ru/ru.citc.education/spring-camel-test
+      jib: {}
 deploy:
   kustomize:
     paths:
