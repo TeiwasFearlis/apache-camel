@@ -62,3 +62,14 @@ jib {
 		user = "nobody"
 	}
 }
+
+tasks {
+	withType<Test> {
+		useJUnitPlatform()
+		jvmArgs("-noverify", "-XX:TieredStopAtLevel=1")
+		minHeapSize = "256M"
+	}
+	named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+		jvmArgs("-Xmx512M", "-Dspring.profiles.active=development", "-noverify", "-XX:TieredStopAtLevel=1")
+	}
+}
