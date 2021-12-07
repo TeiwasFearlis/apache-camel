@@ -5,17 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.jackson.JacksonDataFormat
-import org.apache.camel.model.dataformat.JsonLibrary
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.JdbcTemplate
+import org.apache.camel.component.jackson.ListJacksonDataFormat
 import org.springframework.stereotype.Component
 
 @Component
 class Starter : RouteBuilder(){
-
-    @Autowired
-    lateinit var jdbcTemplate: JdbcTemplate
-
 
     // override fun configure() {
     //     from("file:/Users/azaitsev/Downloads/apache-camel/files/input")
@@ -37,32 +31,24 @@ class Starter : RouteBuilder(){
     //         }
 
     override fun configure() {
+       // val file = File("Users/azaitsev/Downloads/files/input/test.json")
+       // val format: JacksonDataFormat = ListJacksonDataFormat(Person::class.java)
         val objectMapper = ObjectMapper()
             objectMapper.registerModule(KotlinModule())
-        var age=""
-        var name=""
-       // JacksonDataFormat(objectMapper,Person::class.java)
         from("file:/Users/azaitsev/Downloads/files/input")
             .routeId("traveling")
-           // .log("\${headers.CamelFileName}")
-
-             .unmarshal(JacksonDataFormat(objectMapper,Person::class.java))
-             .process { e ->
-                age = e.getIn().getBody(Person::class.java).age
-               name = e.getIn().getBody(Person::class.java).name
-                // val sql = "INSERT INTO age_table(age,name) values('$age','$name')"
-                 // jdbcTemplate.queryForObject(sql, String::class.java)
-                 // e.getIn().body
-             }
-            // .unmarshal(JacksonDataFormat(objectMapper,String::class.java))
-            // .to("file:/Users/azaitsev/Downloads/files/output")
-             .setBody(simple("INSERT INTO age_table(age,name) values('$age','$name')"))
+             // .unmarshal(JacksonDataFormat(objectMapper,PersonList::class.java))
+              .unmarshal(JacksonDataFormat(objectMapper,PersonList::class.java))
+             .log(">>>>> \${body}")
+             .setBody(simple("INSERT INTO age_table(age,name) values('\${body.list.get(0).age','\${body.list.get(0).name}')"))
             .log(">>>>> \${body}")
              .to("jdbc:dataSource")
-            .end()
-            // .setBody(simple("select * from age_table"))
-            // .to("jdbc:dataSource")
             }
+
+    data class PersonList(
+        val list: List<Person>,
+    )
+
 
     data class Person(
         val age: String,

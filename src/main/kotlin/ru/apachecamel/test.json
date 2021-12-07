@@ -1,4 +1,6 @@
-{
-  "age": "33",
-  "name": "anton"
-}
+
+{"list":
+[{"age": "3",
+  "name": "ant"},
+  {"age": "33",
+    "name": "a"}]}
