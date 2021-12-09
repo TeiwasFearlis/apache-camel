@@ -9,4 +9,3 @@ class ApacheCamelApplication
 fun main(args: Array<String>) {
     runApplication<ApacheCamelApplication>(*args)
 }
-

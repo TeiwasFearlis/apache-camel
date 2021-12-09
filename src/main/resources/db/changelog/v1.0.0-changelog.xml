@@ -21,6 +21,8 @@ http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibas
             </column>
             <column name="name" type="varchar">
             </column>
+            <column name="date" type="timestamp">
+            </column>
         </createTable>
     </changeSet>
 </databaseChangeLog>
