@@ -31,6 +31,8 @@ dependencies {
 
 	implementation("org.apache.camel:camel-quartz:3.13.0")
 
+	implementation("org.apache.camel:camel-http:3.13.0")
+
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
 
 	implementation("commons-logging:commons-logging:1.2")

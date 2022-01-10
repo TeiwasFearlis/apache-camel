@@ -6,23 +6,71 @@
 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
 http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
 
-    <changeSet author="Anton" id="create_age_table">
+    <changeSet author="Anton" id="create_active_user">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="age_table"/>
+                <tableExists tableName="active_user"/>
             </not>
         </preConditions>
-        <createTable tableName="age_table">
-            <column name="id" autoIncrement="true" type="bigint">
-                <constraints primaryKey="true" nullable="false" unique="true"/>
-            </column>
-            <column name="age" type="varchar">
-                <constraints  nullable="false"/>
+        <createTable tableName="active_user">
+            <column name="id" type="bigint">
+                <constraints unique="true" nullable="false" />
             </column>
             <column name="name" type="varchar">
+                <constraints nullable="false" unique="true"/>
             </column>
-            <column name="date" type="timestamp">
+            <column name="email" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="gender" type="varchar">
+            </column>
+            <column name="status" type="varchar">
             </column>
         </createTable>
     </changeSet>
+
+
+<changeSet author="Anton" id="create_inactive_user">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="inactive_user"/>
+            </not>
+        </preConditions>
+        <createTable tableName="inactive_user">
+        <column name="id" type="bigint">
+            <constraints  unique="true" nullable="false"/>
+        </column>
+        <column name="name" type="varchar">
+            <constraints nullable="false" unique="true"/>
+        </column>
+        <column name="email" type="varchar">
+            <constraints nullable="false" unique="true"/>
+        </column>
+        <column name="gender" type="varchar">
+        </column>
+        <column name="status" type="varchar">
+        </column>
+    </createTable>
+</changeSet>
+
+
+    <changeSet author="Anton" id="create_posts_table">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="posts_table"/>
+            </not>
+        </preConditions>
+        <createTable tableName="posts_table">
+            <column name="user_id" type="bigint">
+                <constraints unique="true"/>
+            </column>
+            <column name="title" type="varchar">
+                <constraints unique="true"/>
+            </column>
+            <column name="body" type="varchar">
+                <constraints unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

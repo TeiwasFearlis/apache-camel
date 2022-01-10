@@ -1,7 +1,108 @@
-
-  {
-    "timeNow": "",
-    "age": "3",
-    "name": "ant"
-  }
-
+{
+  "meta": {
+    "pagination": {
+      "total": 1553,
+      "pages": 78,
+      "page": 78,
+      "limit": 20,
+      "links": {
+        "previous": "https://gorest.co.in/public/v1/users?page=77",
+        "current": "https://gorest.co.in/public/v1/users?page=78",
+        "next": "https://gorest.co.in/public/v1/users?page=79"
+      }
+    }
+  },
+  "data": [
+    {
+      "id": 1761,
+      "name": "Test Testington",
+      "email": "myemail558@coolemail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1762,
+      "name": "Rebeca",
+      "email": "Jensen.Gerhold@gmail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1764,
+      "name": "Frankie",
+      "email": "Gerard.Kreiger@yahoo.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1771,
+      "name": "Ignacia Obrien",
+      "email": "fay.adkins@yandex.edu",
+      "gender": "female",
+      "status": "active"
+    },
+    {
+      "id": 1772,
+      "name": "Yoshio Parker",
+      "email": "aiko.rivers@mail.gov",
+      "gender": "female",
+      "status": "active"
+    },
+    {
+      "id": 1776,
+      "name": "Rachael",
+      "email": "Lessie.Goldner@hotmail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1779,
+      "name": "Makayla",
+      "email": "Mitchell_Gorczany@gmail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1782,
+      "name": "bull",
+      "email": "bull@gmail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1784,
+      "name": "Sopoline Mueller",
+      "email": "herrod.mccarty@mail.net",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1785,
+      "name": "Alvin House",
+      "email": "idola.raymond@mail.edu",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1786,
+      "name": "TadTestPostman",
+      "email": "tad@test.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1790,
+      "name": "praveenjairaj",
+      "email": "LWgDVxtXOw@gmail.com",
+      "gender": "male",
+      "status": "active"
+    },
+    {
+      "id": 1791,
+      "name": "praveen",
+      "email": "ufSGqsitul@gmail.com",
+      "gender": "male",
+      "status": "active"
+    }
+  ]
+}
