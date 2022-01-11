@@ -1,4 +1,53 @@
 {
+  "exchange": {
+    "properties": [],
+    "inMessage" : {
+      "headers": []
+      "body": [1,2,3]
+    },
+    "outMessage" : {
+      //deprecated
+    }
+  }
+}
+
+SPLIT(body())
+
+{
+  "exchange": {
+    "properties": [],
+    "inMessage" : {
+      "headers": []
+      "body": 1
+    },
+    "outMessage" : {
+      //deprecated
+    }
+  }
+}
+{
+
+}
+
+end()
+{
+  "exchange": {
+    "properties": [],
+    "inMessage" : {
+      "headers": []
+      "body": [1,2,3]
+    },
+    "outMessage" : {
+      //deprecated
+    }
+  }
+}
+
+
+
+
+
+{
   "meta": {
     "pagination": {
       "total": 1553,

@@ -3,10 +3,12 @@ package ru.apachecamel
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import nl.topicus.overheid.kamel.processExchange
+import nl.topicus.overheid.kamel.route.from
+import nl.topicus.overheid.kamel.split
 import org.apache.camel.Exchange
 import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.jackson.JacksonDataFormat
-import org.apache.camel.component.jackson.ListJacksonDataFormat
 import org.springframework.stereotype.Component
 
 @Component
@@ -46,42 +48,47 @@ class Starter : RouteBuilder() {
         val objectMapper = ObjectMapper()
         objectMapper.registerModule(KotlinModule())
         restConfiguration().host("gorest.co.in/").producerComponent("https")
-        from("quartz://timerName?cron=0/5+*+*+*+*+?&stateful=true")
-            .setProperty("continue", constant(true))
-            .setProperty("page", constant(1))
-            .loopDoWhile(simple("\${exchangeProperty.continue}"))
-            .setHeader(Exchange.HTTP_QUERY, simple("page=\${exchangeProperty.page}"))
-            .to("rest:get:public/v1/users")
-            .unmarshal(JacksonDataFormat(objectMapper, Response::class.java))
-            .process {
-                val pages = it.getIn().getBody(Response::class.java).meta.pagination.pages
-                val page = it.getIn().getBody(Response::class.java).meta.pagination.page
-                if (page == pages) {
-                    it.properties["continue"] = false
-                } else {
-                    it.properties["page"] = it.properties["page"] as Int + 1
+
+        from("quartz://timerName?cron=0/5+*+*+*+*+?&stateful=true") {
+            setProperty("continue", constant(true))
+            setProperty("page", constant(1))
+            loopDoWhile(simple("\${exchangeProperty.continue}")) {
+                setHeader(Exchange.HTTP_QUERY, simple("page=\${exchangeProperty.page}"))
+                to("rest:get:public/v1/users")
+                unmarshal(JacksonDataFormat(objectMapper, Response::class.java))
+                processExchange {
+                    val response = body<Response>()
+                    val pages = response.meta.pagination.pages
+                    val page = response.meta.pagination.page
+                    if (page == pages) {
+                        properties["continue"] = false
+                    } else {
+                        properties["page"] = properties["page"] as Int + 1
+                    }
+                    `in`.body = response.data
                 }
-                it.`in`.body = it.getIn().getBody(Response::class.java).data
+                split(body()) { ->
+                    processExchange {
+                        val users = body<Users>()
+                        headers["CamelJdbcParameters"] =
+                            mapOf(
+                                "id" to users.id,
+                                "name" to users.name,
+                                "email" to users.email,
+                                "gender" to users.gender,
+                                "status" to users.status,
+                            )
+                        `in`.body = when (users.status) {
+                            "active" -> "INSERT  INTO active_user(id,name,email,gender,status) values(:?id,:?name,:?email,:?gender,:?status) ON CONFLICT DO NOTHING"
+                            else -> "INSERT INTO inactive_user(id,name,email,gender,status) values(:?id,:?name,:?email,:?gender,:?status) ON CONFLICT DO NOTHING"
+                        }
+                    }
+                    to("jdbc:dataSource?useHeadersAsParameters=true")
+                }
             }
-            .split(body())
-            .process {
-                val body = it.getIn().getBody(Users::class.java)
-                it.getIn().headers["CamelJdbcParameters"] = mapOf(
-                    "id" to body.id,
-                    "name" to body.name,
-                    "email" to body.email,
-                    "gender" to body.gender,
-                    "status" to body.status,
-                )
-            }
-            .choice()
-            .`when`(simple("\${body.status} == 'active'"))
-            .setBody(simple("INSERT  INTO active_user(id,name,email,gender,status) values(:?id,:?name,:?email,:?gender,:?status) ON CONFLICT DO NOTHING"))
-            .to("jdbc:dataSource?useHeadersAsParameters=true")
-            .`when`(simple("\${body.status} == 'inactive'"))
-            .setBody(simple("INSERT INTO inactive_user(id,name,email,gender,status) values(:?id,:?name,:?email,:?gender,:?status) ON CONFLICT DO NOTHING"))
-            .to("jdbc:dataSource?useHeadersAsParameters=true")
-            .end()
+        }
+
+
         from("quartz://timer?cron=0/6+*+*+*+*+?&stateful=true")
             .setProperty("continue", constant(true))
             .setBody(simple("SELECT id FROM active_user UNION SELECT id FROM inactive_user"))
